@@ -2,52 +2,272 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>游戏详情</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏详情页 | GameCategory</title>
+
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:Arial;background:#f5f5f5;color:#000;}
-        .container{display:flex;max-width:1200px;margin:20px auto;gap:20px;}
-        .left{flex:3;}
-        .big-show{position:relative;width:100%;height:400px;overflow:hidden;background:#fff;border-radius:20px;}
-        .big-show img{width:100%;height:100%;object-fit:cover;display:none;border-radius:20px;}
-        .big-show img.active{display:block;}
-        .arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.5);color:#fff;font-size:24px;padding:8px 12px;cursor:pointer;border-radius:50%;}
-        .arrow.left{left:10px;}
-        .arrow.right{right:10px;}
-        .thumbs{display:flex;gap:10px;margin-top:10px;}
-        .thumbs img{width:100px;height:60px;object-fit:cover;border:2px solid transparent;cursor:pointer;border-radius:4px;}
-        .thumbs img.active{border-color:#3498db;}
-        .right{flex:1;display:flex;flex-direction:column;gap:15px;}
-        .poster img{width:100%;border-radius:8px;}
-        .wish{background:#3498db;color:#fff;padding:12px;text-align:center;border-radius:4px;cursor:pointer;transition:all .2s;}
-        .wish:hover{background:#fff;color:#3498db;border:1px solid #3498db;}
-        .info{background:#fff;padding:20px;border-radius:8px;display:flex;justify-content:space-between;align-items:flex-start;}
-        .info-left{flex:1;}
-        .info-right{text-align:right;}
-        .score{font-size:32px;font-weight:bold;color:#f39c12;}
-        .stars{color:#f39c12;font-size:24px;}
-        .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
-        .tags span{background:#3498db;color:#fff;padding:4px 10px;border-radius:4px;font-size:14px;cursor:pointer;transition:color .2s;}
-        .tags span:hover{color:#61c1ff;}
-        h2{margin-bottom:10px;}
-        .back{position:fixed;bottom:30px;right:30px;background:#000;color:#fff;padding:10px 20px;border-radius:12px;text-decoration:none;}
+        /* ---------- 根变量与重置 ---------- */
+        :root {
+            --primary: #3498db;
+            --primary-light: #61c1ff;
+            --bg-page: #f5f5f5;
+            --bg-card: #ffffff;
+            --text-main: #222;
+            --text-light: #666;
+            --star: #f39c12;
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --radius-sm: 6px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, .08);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, .12);
+            --max-width: 1200px;
+            --thumb-w: 100px;
+            --thumb-h: 60px;
+            --arrow-size: 44px;
+            --arrow-bg: rgba(0, 0, 0, .45);
+            --arrow-hover: rgba(0, 0, 0, .65);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ---------- 顶部返回箭头 ---------- */
+        .back-top {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 60px;
+            height: 30px;
+            background: #888;
+            color: #fff;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: background .2s;
+            z-index: 1000;
+        }
+
+        .back-top:hover {
+            background: #666;
+        }
+
+        /* ---------- 主容器 ---------- */
+        .container {
+            max-width: var(--max-width);
+            margin: 60px auto 20px;
+            padding: 0 20px;
+            display: flex;
+            gap: 30px;
+        }
+
+        .left {
+            flex: 3;
+        }
+
+        .right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* ---------- 轮播区域 ---------- */
+        .big-show {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .big-show img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            border-radius: var(--radius-lg);
+        }
+
+        .big-show img.active {
+            display: block;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: var(--arrow-size);
+            height: var(--arrow-size);
+            background: var(--arrow-bg);
+            color: #fff;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+            user-select: none;
+            transition: background .2s;
+        }
+
+        .arrow:hover {
+            background: var(--arrow-hover);
+        }
+
+        .arrow.left {
+            left: 10px;
+        }
+
+        .arrow.right {
+            right: 10px;
+        }
+
+        /* ---------- 缩略图 ---------- */
+        .thumbs {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .thumbs img {
+            width: var(--thumb-w);
+            height: var(--thumb-h);
+            object-fit: cover;
+            border: 2px solid transparent;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: border-color .2s;
+        }
+
+        .thumbs img.active {
+            border-color: var(--primary);
+        }
+
+        /* ---------- 右侧海报 & 按钮 ---------- */
+        .poster img {
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow);
+        }
+
+        .wish {
+            background: var(--primary);
+            color: #fff;
+            padding: 12px;
+            text-align: center;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all .2s;
+            font-weight: 600;
+        }
+
+        .wish:hover {
+            background: var(--bg-card);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        /* ---------- 简介与评分 ---------- */
+        .info {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .info-left {
+            flex: 1;
+            padding-right: 20px;
+        }
+
+        .info-right {
+            text-align: right;
+        }
+
+        .stars {
+            color: var(--star);
+            font-size: 24px;
+            letter-spacing: 2px;
+        }
+
+        .score {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--star);
+            margin-top: 4px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .tags span {
+            background: var(--primary);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .tags span:hover {
+            color: var(--primary-light);
+        }
     </style>
 </head>
+
 <body>
+    <!-- 左上角返回箭头 -->
+    <a class="back-top" href="https://kane-gc.github.io/GameSharingStationWeb/GameCategory%20">← 返回</a>
+
+    <!-- 主容器 -->
     <div class="container">
+        <!-- 左侧轮播 -->
         <div class="left">
             <div class="big-show">
-                <img src="https://via.placeholder.com/800x400?text=截图1" class="active">
-                <img src="https://via.placeholder.com/800x400?text=截图2">
-                <img src="https://via.placeholder.com/800x400?text=截图3">
-                <img src="https://via.placeholder.com/800x400?text=截图4">
-                <img src="https://via.placeholder.com/800x400?text=截图5">
-                <img src="https://via.placeholder.com/800x400?text=截图6">
+                <img src="https://kane-gc.github.io/GameSharingStationWeb/GameCategory%20/插图1.png" alt="For Honor" class="active">
+                <img src="https://via.placeholder.com/800x400?text=截图2" alt="截图2">
+                <img src="https://via.placeholder.com/800x400?text=截图3" alt="截图3">
+                <img src="https://via.placeholder.com/800x400?text=截图4" alt="截图4">
+                <img src="https://via.placeholder.com/800x400?text=截图5" alt="截图5">
+                <img src="https://via.placeholder.com/800x400?text=截图6" alt="截图6">
                 <div class="arrow left">‹</div>
                 <div class="arrow right">›</div>
             </div>
             <div class="thumbs">
-                <img src="https://via.placeholder.com/100x60?text=1" class="active" data="0">
+                <img src="https://kane-gc.github.io/GameSharingStationWeb/GameCategory%20/插图1.png" class="active" data="0">
                 <img src="https://via.placeholder.com/100x60?text=2" data="1">
                 <img src="https://via.placeholder.com/100x60?text=3" data="2">
                 <img src="https://via.placeholder.com/100x60?text=4" data="3">
@@ -55,16 +275,30 @@
                 <img src="https://via.placeholder.com/100x60?text=6" data="5">
             </div>
         </div>
+
+        <!-- 右侧海报 & 按钮 -->
         <div class="right">
-            <div class="poster"><img src="https://via.placeholder.com/300x400?text=海报" alt="海报"></div>
+            <div class="poster">
+                <img src="https://via.placeholder.com/300x400?text=海报" alt="海报">
+            </div>
             <div class="wish">添加至您的愿望单</div>
         </div>
     </div>
+
+    <!-- 简介与评分 -->
     <div class="container">
         <div class="info">
             <div class="info-left">
                 <h2>游戏简介</h2>
                 <p>在这款第三人称英雄近战格斗游戏中，你可以单挑，也可以与好友并肩作战。化身维京人、武士、武林人士或异乡人，进入战乱世界。体验残酷的PvP、团队模式或刺激的故事战役。</p>
+                <div class="tags">
+                    <span>中世纪剑术</span>
+                    <span>动作</span>
+                    <span>多人</span>
+                    <span>格斗</span>
+                    <span>玩家对战</span>
+                    <span>第三人称</span>
+                </div>
             </div>
             <div class="info-right">
                 <div class="stars">★★★★★</div>
@@ -72,26 +306,28 @@
             </div>
         </div>
     </div>
-    <a class="back" href="index.html">返回列表</a>
+
+    <!-- 轮播脚本 -->
     <script>
-        const bigs=document.querySelectorAll('.big-show img');
-        const thumbs=document.querySelectorAll('.thumbs img');
-        const leftA=document.querySelector('.arrow.left');
-        const rightA=document.querySelector('.arrow.right');
-        let cur=0;
-        function show(i){
-            bigs.forEach(x=>x.classList.remove('active'));
-            thumbs.forEach(x=>x.classList.remove('active'));
-            bigs[i].classList.add('active');
-            thumbs[i].classList.add('active');
-            cur=i;
-        }
-        thumbs.forEach(t=>t.onclick=function(){show(+this.dataset)});
-        leftA.onclick=function(){cur=(cur-1+bigs.length)%bigs.length;show(cur);};
-        rightA.onclick=function(){cur=(cur+1)%bigs.length;show(cur);};
-        let auto=setInterval(()=>{cur=(cur+1)%bigs.length;show(cur);},3000);
-        document.querySelector('.big-show').onmouseenter=()=>clearInterval(auto);
-        document.querySelector('.big-show').onmouseleave=()=>auto=setInterval(()=>{cur=(cur+1)%bigs.length;show(cur);},3000);
+        const bigs = document.querySelectorAll('.big-show img');
+        const thumbs = document.querySelectorAll('.thumbs img');
+        const leftA = document.querySelector('.arrow.left');
+        const rightA = document.querySelector('.arrow.right');
+
+        let cur = 0;
+        const show = i => {
+            bigs.forEach((x, idx) => x.classList.toggle('active', idx === i));
+            thumbs.forEach((x, idx) => x.classList.toggle('active', idx === i));
+            cur = i;
+        };
+
+        thumbs.forEach(t => t.onclick = () => show(+t.dataset));
+        leftA.onclick = () => show((cur - 1 + bigs.length) % bigs.length);
+        rightA.onclick = () => show((cur + 1) % bigs.length);
+
+        let auto = setInterval(() => show((cur + 1) % bigs.length), 3000);
+        document.querySelector('.big-show').onmouseenter = () => clearInterval(auto);
+        document.querySelector('.big-show').onmouseleave = () => auto = setInterval(() => show((cur + 1) % bigs.length), 3000);
     </script>
 </body>
 </html>
