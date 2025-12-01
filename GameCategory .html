@@ -2,8 +2,6 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>游戏分享站</title>
     <style>
         :root {
@@ -161,7 +159,6 @@
             justify-content: center;
             cursor: pointer;
         }
-        /* 返回按钮样式 */
         .return-div {
             position: absolute;
             bottom: var(--return-b);
@@ -175,12 +172,12 @@
             color: #fff;
             font-size: 16px;
             cursor: pointer;
-            text-decoration: none; /* 去掉下划线 */
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
-    <div class="div1"><img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fDI%3D&auto=format&fit=crop&w=1920&q=80" alt="top img"></div>
+    <div class="div1"><img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0&auto=format&fit=crop&w=1920&q=80" alt="top img"></div>
     <div class="search"><input placeholder="搜索"></div>
     <div class="search-placeholder"></div>
 
@@ -214,20 +211,52 @@
             <div class="list-div"><img src="" alt="list img"></div>
         </div>
 
-        <div class="game-wrapper">
-            <div class="game-div"><img src="" alt="game 1"></div>
-            <div class="game-div"><img src="" alt="game 2"></div>
-            <div class="game-div"><img src="" alt="game 3"></div>
-            <div class="game-div"><img src="" alt="game 4"></div>
-            <div class="game-div"><img src="" alt="game 5"></div>
-            <div class="game-div"><img src="" alt="game 6"></div>
-            <div class="game-div"><img src="" alt="game 7"></div>
-            <div class="game-div"><img src="" alt="game 8"></div>
+        <div class="game-wrapper" id="gameWrapper">
             <div class="next-page">下一页</div>
         </div>
 
-        <!-- 返回按钮：点击直接跳转 -->
         <a class="return-div" href="https://kane-gc.github.io/GameSharingStationWeb/">返回</a>
     </div>
+
+    <script>
+        const games = [
+            {id:1, img:'https://via.placeholder.com/500x130?text=游戏1'},
+            {id:2, img:'https://via.placeholder.com/500x130?text=游戏2'},
+            {id:3, img:'https://via.placeholder.com/500x130?text=游戏3'},
+            {id:4, img:'https://via.placeholder.com/500x130?text=游戏4'},
+            {id:5, img:'https://via.placeholder.com/500x130?text=游戏5'},
+            {id:6, img:'https://via.placeholder.com/500x130?text=游戏6'},
+            {id:7, img:'https://via.placeholder.com/500x130?text=游戏7'},
+            {id:8, img:'https://via.placeholder.com/500x130?text=游戏8'},
+            {id:9, img:'https://via.placeholder.com/500x130?text=游戏9'},
+            {id:10, img:'https://via.placeholder.com/500x130?text=游戏10'},
+            {id:11, img:'https://via.placeholder.com/500x130?text=游戏11'},
+            {id:12, img:'https://via.placeholder.com/500x130?text=游戏12'}
+        ];
+        let currentPage = 0;
+        const perPage = 8;
+        const gameWrapper = document.getElementById('gameWrapper');
+        const nextPageBtn = document.querySelector('.next-page');
+
+        function renderGames() {
+            const start = currentPage * perPage;
+            const end = start + perPage;
+            const pageGames = games.slice(start, end);
+            document.querySelectorAll('.game-div').forEach(g => g.remove());
+            pageGames.forEach(game => {
+                const div = document.createElement('div');
+                div.className = 'game-div';
+                div.innerHTML = `<img src="${game.img}" alt="游戏${game.id}">`;
+                div.onclick = () => window.location.href = `detail.html?id=${game.id}`;
+                gameWrapper.insertBefore(div, nextPageBtn);
+            });
+            nextPageBtn.style.display = end >= games.length ? 'none' : 'flex';
+        }
+        nextPageBtn.onclick = () => {
+            currentPage++;
+            renderGames();
+        };
+        renderGames();
+    </script>
 </body>
 </html>
